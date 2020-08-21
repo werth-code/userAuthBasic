@@ -40,7 +40,7 @@ app.get("/", (req, res) => {
     res.render("home")
 })
 
-app.get("/secret", (req, res) => {
+app.get("/secret", isLoggedIn, (req, res) => {
     res.render("secret")
 })
 
@@ -78,6 +78,20 @@ app.post("/login", passport.authenticate("local", {  //This is an example of mid
 })
 
 //Log Out Routes
+
+app.get("/logout", (req, res) => {
+    req.logout()
+    res.redirect("/")
+})
+
+//Middlewear to ask if user is logged in before rendering the secret page
+
+function isLoggedIn(req, res, next) {
+    if(req.isAuthenticated()){
+    return next();
+    } 
+    res.redirect("/login")
+}
 
 //Local Server
 app.listen(port, () =>
